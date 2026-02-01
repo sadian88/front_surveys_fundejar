@@ -1,0 +1,118 @@
+:host {
+    display: block;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.card-white {
+    background: #ffffff;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 24px;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+}
+
+.progress-bar-container {
+    height: 12px;
+    background: #f1f5f9;
+    border-radius: 999px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: #00e600;
+    border-radius: 999px;
+    transition: width 0.8s ease-out;
+}
+
+.tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    font-size: 11px;
+    font-weight: 800;
+    color: #94a3b8;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.tab-btn.active {
+    color: #0f172a;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #00e600;
+    border-radius: 3px 3px 0 0;
+}
+
+.field-box {
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 14px;
+    padding: 12px 16px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+}
+
+.business-card {
+    background: #0d1e15;
+    border-radius: 28px;
+    padding: 32px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.business-card-overlay {
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    opacity: 0.1;
+    width: 240px;
+    pointer-events: none;
+}
+
+.business-badge {
+    background: #00e600;
+    color: #032f03;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    width: fit-content;
+}
+
+.business-subcard {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}

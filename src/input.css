@@ -1,0 +1,78 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-emerald-500: #00E600;
+  --color-emerald-600: #00c800;
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-400: #94a3b8;
+  --color-slate-600: #475569;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+
+  --font-sora: "Sora", "Segoe UI", Arial, sans-serif;
+  
+  --animate-float-in: float-in 0.4s ease-out;
+  --animate-pulse-ring: pulse-ring 2s infinite;
+
+  @keyframes float-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.85);
+      opacity: 0.8;
+    }
+    70% {
+      transform: scale(1.05);
+      opacity: 0.3;
+    }
+    100% {
+      transform: scale(1.2);
+      opacity: 0;
+    }
+  }
+}
+
+:root {
+  --brand-green: #00E600;
+  --brand-green-strong: #00c800;
+  --brand-slate: #e2e8f0;
+  --brand-ink: #0f172a;
+  --brand-muted: #64748b;
+  --card-bg: #ffffff;
+  --card-border: rgba(148, 163, 184, 0.25);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sora);
+    background:
+      radial-gradient(760px 420px at 10% -10%, rgba(0, 230, 0, 0.2), transparent 60%),
+      radial-gradient(900px 520px at 95% 0%, rgba(15, 23, 42, 0.08), transparent 65%),
+      #f1f5f9;
+    color: var(--brand-ink);
+    min-height: 100vh;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+

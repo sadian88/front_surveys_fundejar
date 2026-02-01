@@ -1,0 +1,49 @@
+<div class="w-full max-w-[1200px] flex flex-col gap-4">
+  <div class="flex items-center justify-between gap-3 text-xs uppercase tracking-[0.2em] text-[#64748b]">
+    <a class="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#64748b] no-underline"
+      routerLink="/summary">Atras</a>
+    <span>Asistencia NFC</span>
+    <span
+      class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[rgba(0,230,0,0.15)] text-[#166534] text-[11px] font-semibold">Activo</span>
+  </div>
+
+  <div
+    class="bg-white border border-[rgba(148,163,184,0.25)] rounded-[22px] p-[18px] shadow-[0_18px_40px_rgba(15,23,42,0.12)] animate-float-in flex flex-col gap-4 text-center">
+    <div class="text-left bg-[#f8fafc] border border-[rgba(148,163,184,0.2)] rounded-2xl p-[12px_14px]">
+      <p class="text-[10px] uppercase tracking-[0.2em] text-[#64748b] m-0 mb-1.5">Sesion activa</p>
+      <p class="text-sm font-bold m-0 mb-1">{{ sessionLabel }}</p>
+      <p class="text-xs text-[#64748b] m-0">Usuario: {{ profile()?.name || 'Participante' }}</p>
+    </div>
+
+    <div class="relative w-[180px] h-[180px] my-2 mx-auto grid place-items-center">
+      <div class="absolute inset-0 rounded-full border-2 border-[rgba(0,230,0,0.35)] animate-pulse-ring"></div>
+      <div
+        class="absolute inset-0 rounded-full border-2 border-[rgba(0,230,0,0.35)] animate-pulse-ring [animation-delay:1.2s]">
+      </div>
+      <div
+        class="w-20 h-20 rounded-[28px] bg-white border border-[rgba(148,163,184,0.3)] grid place-items-center shadow-[0_12px_24px_rgba(15,23,42,0.1)]">
+        <svg class="w-[42px] h-[42px] fill-[#0f172a]" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M12 4.5c-4.1 0-7.5 3.4-7.5 7.5s3.4 7.5 7.5 7.5 7.5-3.4 7.5-7.5S16.1 4.5 12 4.5zm0 3a4.5 4.5 0 110 9 4.5 4.5 0 010-9zm0 2a2.5 2.5 0 100 5 2.5 2.5 0 000-5z" />
+        </svg>
+      </div>
+    </div>
+
+    <h2 class="text-lg font-bold m-0 text-center">Escanea tu tarjeta NFC</h2>
+    <p class="text-[13px] text-[#64748b] m-0 text-center">{{ status() }}</p>
+
+    <div class="flex justify-between text-[11px] text-[#64748b] bg-[#f8fafc] rounded-xl p-[8px_12px] text-center">
+      <span>Esperando lectura...</span>
+      <span class="font-semibold">Senal: 100%</span>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+      <button
+        class="w-full inline-flex items-center justify-center py-2.5 px-3.5 border border-[#cbd5e1] rounded-2xl text-[14px] font-semibold text-[#1e293b] bg-white cursor-pointer"
+        type="button" (click)="cancel()">Cancelar registro</button>
+      <button
+        class="w-full border-none rounded-2xl py-3 px-4 text-[15px] font-bold bg-[#00e600] text-[#032f03] cursor-pointer shadow-[0_12px_20px_rgba(0,230,0,0.25)] transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_28px_rgba(0,230,0,0.28)]"
+        type="button" (click)="simulate()">Simular lectura</button>
+    </div>
+  </div>
+</div>

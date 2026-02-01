@@ -1,0 +1,157 @@
+<div class="w-full max-w-[1200px] flex flex-col gap-4.5">
+  <div class="flex items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <div class="w-[42px] h-[42px] rounded-14 bg-[#00e600] text-[#033c03] grid place-items-center font-bold">{{
+        profileInitials() }}</div>
+      <div>
+        <p class="text-sm font-bold m-0 mb-0.5">{{ surveyTitle() }}</p>
+        <p class="text-xs text-[#64748b] m-0">{{ profile()?.name || 'Participante' }}</p>
+      </div>
+    </div>
+    <button
+      class="border-none bg-transparent text-[#16a34a] font-semibold text-xs uppercase tracking-[0.18em] cursor-pointer"
+      type="button" (click)="goToAssistant()">Asistente</button>
+  </div>
+
+  <div class="flex justify-between text-xs uppercase tracking-[0.12em] text-[#64748b]">
+    <span>{{ stepLabel() }}</span>
+    <span>{{ progress() }}% completado</span>
+  </div>
+  <div class="w-full h-2 bg-[#e2e8f0] rounded-full overflow-hidden">
+    <div class="h-full bg-linear-to-r from-[#00e600] to-[#7cff7c] rounded-full transition-all duration-500"
+      [style.width.%]="progress()"></div>
+  </div>
+
+  <div
+    class="bg-white border border-[rgba(148,163,184,0.25)] rounded-[22px] p-[18px] shadow-[0_18px_40px_rgba(15,23,42,0.12)] animate-float-in flex flex-col gap-6 text-center"
+    *ngIf="isLoading">
+    <p class="text-sm text-[#64748b] m-0 text-center">Cargando encuesta...</p>
+  </div>
+
+  <div
+    class="bg-white border border-[rgba(148,163,184,0.25)] rounded-[22px] p-[18px] shadow-[0_18px_40px_rgba(15,23,42,0.12)] animate-float-in flex flex-col gap-6 text-center"
+    *ngIf="!isLoading && errorMessage">
+    <p class="text-sm text-[#dc2626] m-0 text-center">{{ errorMessage }}</p>
+  </div>
+
+  <div
+    class="bg-white border border-[rgba(148,163,184,0.25)] rounded-[22px] p-[18px] shadow-[0_18px_40px_rgba(15,23,42,0.12)] animate-float-in flex flex-col gap-6 text-center"
+    *ngIf="!isLoading && !errorMessage">
+    <div class="flex flex-col gap-6" *ngIf="currentQuestion() as question">
+      <h2 class="text-xl font-bold m-0 mb-1.5">{{ question.label }}</h2>
+      <p class="text-[13px] text-[#64748b] m-0 mb-4 text-center">Responda para avanzar al siguiente paso.</p>
+
+      <div class="flex flex-col gap-3 text-left" [ngSwitch]="question.type">
+        <div *ngSwitchCase="'rating'" class="grid grid-cols-[repeat(auto-fit,minmax(46px,1fr))] gap-2.5 justify-center">
+          <button *ngFor="let value of ratingValues(question)" type="button"
+            class="border border-[#e2e8f0] rounded-[14px] py-2.5 font-semibold bg-[#f8fafc] cursor-pointer transition-all"
+            [class.bg-[#00e600]]="currentAnswer() === value" [class.border-[#00e600]]="currentAnswer() === value"
+            [class.text-[#033c03]]="currentAnswer() === value"
+            [class.shadow-[0_10px_16px_rgba(0,230,0,0.25)]]="currentAnswer() === value" (click)="setRating(value)">
+            {{ value }}
+          </button>
+        </div>
+
+        <div *ngSwitchCase="'radio'" class="flex flex-col gap-2.5">
+          <button *ngFor="let option of question.options || []" type="button"
+            class="text-left border border-[#e2e8f0] rounded-[14px] p-[10px_14px] bg-white cursor-pointer font-semibold text-[#1e293b] transition-all"
+            [class.border-[#00e600]]="currentAnswer() === option"
+            [class.bg-[rgba(0,230,0,0.12)]]="currentAnswer() === option" (click)="setChoice(option)">
+            {{ option }}
+          </button>
+        </div>
+
+        <div *ngSwitchCase="'select'" class="flex flex-col gap-2.5">
+          <button *ngFor="let option of question.options || []" type="button"
+            class="text-left border border-[#e2e8f0] rounded-[14px] p-[10px_14px] bg-white cursor-pointer font-semibold text-[#1e293b] transition-all"
+            [class.border-[#00e600]]="currentAnswer() === option"
+            [class.bg-[rgba(0,230,0,0.12)]]="currentAnswer() === option" (click)="setChoice(option)">
+            {{ option }}
+          </button>
+        </div>
+
+        <div *ngSwitchCase="'checkbox'" class="flex flex-col gap-2.5">
+          <button *ngFor="let option of question.options || []" type="button"
+            class="text-left border border-[#e2e8f0] rounded-[14px] p-[10px_14px] bg-white cursor-pointer font-semibold text-[#1e293b] transition-all"
+            [class.border-[#00e600]]="isMultiSelected(option)" [class.bg-[rgba(0,230,0,0.18)]]="isMultiSelected(option)"
+            (click)="toggleMulti(option)">
+            {{ option }}
+          </button>
+        </div>
+
+        <div *ngSwitchCase="'text'" class="w-full">
+          <input
+            class="w-full rounded-[14px] border border-[#e2e8f0] p-[12px_14px] text-sm bg-white text-[#0f172a] outline-none transition-all focus:border-[#00e600] focus:shadow-[0_0_0_3px_rgba(0,230,0,0.15)]"
+            type="text" [placeholder]="question.placeholder || 'Escriba su respuesta'" [ngModel]="currentAnswer() || ''"
+            (ngModelChange)="setText($event)" />
+        </div>
+
+        <div *ngSwitchCase="'email'" class="w-full">
+          <input
+            class="w-full rounded-[14px] border border-[#e2e8f0] p-[12px_14px] text-sm bg-white text-[#0f172a] outline-none transition-all focus:border-[#00e600] focus:shadow-[0_0_0_3px_rgba(0,230,0,0.15)]"
+            type="email" [placeholder]="question.placeholder || 'correo@ejemplo.com'" [ngModel]="currentAnswer() || ''"
+            (ngModelChange)="setText($event)" />
+        </div>
+
+        <div *ngSwitchCase="'date'" class="w-full">
+          <input
+            class="w-full rounded-[14px] border border-[#e2e8f0] p-[12px_14px] text-sm bg-white text-[#0f172a] outline-none transition-all focus:border-[#00e600] focus:shadow-[0_0_0_3px_rgba(0,230,0,0.15)]"
+            type="date" [ngModel]="currentAnswer() || ''" (ngModelChange)="setText($event)" />
+        </div>
+
+        <div *ngSwitchCase="'number'" class="w-full">
+          <input
+            class="w-full rounded-[14px] border border-[#e2e8f0] p-[12px_14px] text-sm bg-white text-[#0f172a] outline-none transition-all focus:border-[#00e600] focus:shadow-[0_0_0_3px_rgba(0,230,0,0.15)]"
+            type="number" [placeholder]="question.placeholder || '0'" [ngModel]="currentAnswer() || ''"
+            (ngModelChange)="setText($event)" />
+        </div>
+
+        <div *ngSwitchCase="'textarea'" class="w-full">
+          <textarea
+            class="w-full rounded-[14px] border border-[#e2e8f0] p-[12px_14px] text-sm bg-white text-[#0f172a] outline-none transition-all focus:border-[#00e600] focus:shadow-[0_0_0_3px_rgba(0,230,0,0.15)] min-h-[100px]"
+            rows="4" [placeholder]="question.placeholder || 'Escriba su respuesta'" [ngModel]="currentAnswer() || ''"
+            (ngModelChange)="setText($event)"></textarea>
+        </div>
+
+        <div *ngSwitchCase="'file'" class="w-full">
+          <input
+            class="w-full rounded-[14px] border border-[#e2e8f0] p-[12px_14px] text-sm bg-white text-[#0f172a] outline-none transition-all focus:border-[#00e600] focus:shadow-[0_0_0_3px_rgba(0,230,0,0.15)]"
+            type="text" [placeholder]="question.placeholder || 'Adjunte un enlace al archivo'"
+            [ngModel]="currentAnswer() || ''" (ngModelChange)="setText($event)" />
+        </div>
+
+        <div *ngSwitchCase="'signature'" class="w-full">
+          <input
+            class="w-full rounded-[14px] border border-[#e2e8f0] p-[12px_14px] text-sm bg-white text-[#0f172a] outline-none transition-all focus:border-[#00e600] focus:shadow-[0_0_0_3px_rgba(0,230,0,0.15)]"
+            type="text" [placeholder]="question.placeholder || 'Nombre completo como firma'"
+            [ngModel]="currentAnswer() || ''" (ngModelChange)="setText($event)" />
+        </div>
+
+        <div *ngSwitchDefault class="w-full">
+          <textarea
+            class="w-full rounded-[14px] border border-[#e2e8f0] p-[12px_14px] text-sm bg-white text-[#0f172a] outline-none transition-all focus:border-[#00e600] focus:shadow-[0_0_0_3px_rgba(0,230,0,0.15)] min-h-[100px]"
+            rows="4" placeholder="Escriba su respuesta" [ngModel]="currentAnswer() || ''"
+            (ngModelChange)="setText($event)"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex gap-2.5 justify-center flex-wrap">
+      <button
+        class="w-full sm:w-auto inline-flex items-center justify-center py-2.5 px-4.5 border border-[#cbd5e1] rounded-2xl text-sm font-semibold text-[#1e293b] bg-white cursor-pointer disabled:opacity-50"
+        type="button" (click)="previous()">
+        Anterior
+      </button>
+      <button
+        class="w-full sm:w-auto sm:min-w-[200px] border-none rounded-2xl py-3 px-4 text-[15px] font-bold bg-[#00e600] text-[#032f03] cursor-pointer shadow-[0_12px_20px_rgba(0,230,0,0.25)] transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_28px_rgba(0,230,0,0.28)]"
+        type="button" (click)="next()">
+        Siguiente
+      </button>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2 text-[11px] text-[#64748b] justify-center">
+    <span class="w-2 h-2 rounded-full bg-[#22c55e] shadow-[0_0_0_6px_rgba(34,197,94,0.2)]"></span>
+    <span>{{ autoSaveLabel() }}</span>
+  </div>
+</div>
