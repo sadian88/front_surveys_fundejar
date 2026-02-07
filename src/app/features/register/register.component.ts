@@ -76,6 +76,21 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  onBirthDateChange() {
+    if (this.form.birthDate) {
+      const birthDate = new Date(this.form.birthDate);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      this.form.age = age > 0 ? age : 0;
+    }
+  }
+
   register() {
     if (!this.form.firstName || !this.form.lastName || !this.form.documentNumber) {
       return;
