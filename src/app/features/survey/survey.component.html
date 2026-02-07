@@ -52,30 +52,66 @@
           </button>
         </div>
 
-        <div *ngSwitchCase="'radio'" class="flex flex-col gap-2.5">
+        <div *ngSwitchCase="'radio'" class="flex flex-col gap-3">
           <button *ngFor="let option of question.options || []" type="button"
-            class="text-left border border-[#e2e8f0] rounded-[14px] p-[10px_14px] bg-white cursor-pointer font-semibold text-[#1e293b] transition-all"
-            [class.border-[#00e600]]="currentAnswer() === option.value"
-            [class.bg-[rgba(0,230,0,0.12)]]="currentAnswer() === option.value" (click)="setChoice(option.value)">
-            {{ option.label }}
+            class="text-left border border-[#e2e8f0] rounded-[22px] min-h-[70px] p-[18px_24px] bg-white cursor-pointer font-bold text-[#1e293b] transition-all flex items-center justify-between group active:scale-[0.97] hover:border-[#00e600]/40 outline-none appearance-none"
+            [class.!border-[#00e600]]="currentAnswer() === option.value"
+            [class.bg-[rgba(0,230,0,0.1)]]="currentAnswer() === option.value"
+            [class.text-[#033c03]]="currentAnswer() === option.value"
+            [class.shadow-[0_12px_24px_rgba(0,230,0,0.12)]]="currentAnswer() === option.value"
+            (click)="setChoice(option.value)">
+            <span class="text-[16px] pr-6 leading-tight">{{ option.label }}</span>
+            <div
+              class="shrink-0 w-6 h-6 rounded-full border-2 border-[#e2e8f0] flex items-center justify-center transition-all bg-white"
+              [class.!border-[#00e600]]="currentAnswer() === option.value"
+              [class.bg-[#00e600]]="currentAnswer() === option.value">
+              <svg *ngIf="currentAnswer() === option.value" class="w-4 h-4 text-[#033c03]" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="4.5">
+                <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
           </button>
         </div>
 
-        <div *ngSwitchCase="'select'" class="flex flex-col gap-2.5">
+        <div *ngSwitchCase="'select'" class="flex flex-col gap-3">
           <button *ngFor="let option of question.options || []" type="button"
-            class="text-left border border-[#e2e8f0] rounded-[14px] p-[10px_14px] bg-white cursor-pointer font-semibold text-[#1e293b] transition-all"
-            [class.border-[#00e600]]="currentAnswer() === option.value"
-            [class.bg-[rgba(0,230,0,0.12)]]="currentAnswer() === option.value" (click)="setChoice(option.value)">
-            {{ option.label }}
+            class="text-left border border-[#e2e8f0] rounded-[22px] min-h-[70px] p-[18px_24px] bg-white cursor-pointer font-bold text-[#1e293b] transition-all flex items-center justify-between group active:scale-[0.97] hover:border-[#00e600]/40 outline-none appearance-none"
+            [class.!border-[#00e600]]="currentAnswer() === option.value"
+            [class.bg-[rgba(0,230,0,0.1)]]="currentAnswer() === option.value"
+            [class.text-[#033c03]]="currentAnswer() === option.value"
+            [class.shadow-[0_12px_24px_rgba(0,230,0,0.12)]]="currentAnswer() === option.value"
+            (click)="setChoice(option.value)">
+            <span class="text-[16px] pr-6 leading-tight">{{ option.label }}</span>
+            <div
+              class="shrink-0 w-6 h-6 rounded-full border-2 border-[#e2e8f0] flex items-center justify-center transition-all bg-white"
+              [class.!border-[#00e600]]="currentAnswer() === option.value"
+              [class.bg-[#00e600]]="currentAnswer() === option.value">
+              <svg *ngIf="currentAnswer() === option.value" class="w-4 h-4 text-[#033c03]" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="4.5">
+                <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
           </button>
         </div>
 
-        <div *ngSwitchCase="'checkbox'" class="flex flex-col gap-2.5">
+        <div *ngSwitchCase="'checkbox'" class="flex flex-col gap-3">
           <button *ngFor="let option of question.options || []" type="button"
-            class="text-left border border-[#e2e8f0] rounded-[14px] p-[10px_14px] bg-white cursor-pointer font-semibold text-[#1e293b] transition-all"
-            [class.border-[#00e600]]="isMultiSelected(option.value)" [class.bg-[rgba(0,230,0,0.18)]]="isMultiSelected(option.value)"
+            class="text-left border border-[#e2e8f0] rounded-[22px] min-h-[70px] p-[18px_24px] bg-white cursor-pointer font-bold text-[#1e293b] transition-all flex items-center justify-between group active:scale-[0.97] hover:border-[#00e600]/40 outline-none appearance-none"
+            [class.!border-[#00e600]]="isMultiSelected(option.value)"
+            [class.bg-[rgba(0,230,0,0.1)]]="isMultiSelected(option.value)"
+            [class.text-[#033c03]]="isMultiSelected(option.value)"
+            [class.shadow-[0_12px_24px_rgba(0,230,0,0.12)]]="isMultiSelected(option.value)"
             (click)="toggleMulti(option.value)">
-            {{ option.label }}
+            <span class="text-[16px] pr-6 leading-tight">{{ option.label }}</span>
+            <div
+              class="shrink-0 w-6 h-6 rounded-[8px] border-2 border-[#e2e8f0] flex items-center justify-center transition-all bg-white"
+              [class.!border-[#00e600]]="isMultiSelected(option.value)"
+              [class.bg-[#00e600]]="isMultiSelected(option.value)">
+              <svg *ngIf="isMultiSelected(option.value)" class="w-4 h-4 text-[#033c03]" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="4.5">
+                <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
           </button>
         </div>
 
