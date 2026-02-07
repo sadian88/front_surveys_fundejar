@@ -14,13 +14,18 @@ export type SurveyQuestionType =
   | 'file'
   | 'signature';
 
+export interface SurveyOption {
+  label: string;
+  value: string;
+}
+
 export interface SurveyQuestion {
   id: string;
   label: string;
   type: SurveyQuestionType;
   placeholder?: string;
   required?: boolean;
-  options?: string[];
+  options?: SurveyOption[];
   dependency?: { parentQuestionId: string; triggerValue: string };
   config?: { min?: number; max?: number; step?: number; multiple?: boolean };
 }
@@ -35,8 +40,9 @@ export class SurveyFlowService {
   lastSavedAt = signal<Date | null>(null);
 
   visibleQuestions = computed(() => {
+    const questions = this.allQuestions();
     const answers = this.answers();
-    return this.allQuestions().filter((q) => this.isQuestionVisible(q, answers));
+    return questions.filter((q: SurveyQuestion) => this.isQuestionVisible(q, answers));
   });
 
   currentQuestion = computed(() => this.visibleQuestions()[this.stepIndex()]);
@@ -45,7 +51,7 @@ export class SurveyFlowService {
     const visible = this.visibleQuestions();
     if (visible.length === 0) return 0;
     const answers = this.answers();
-    const answeredCount = visible.filter((q) => this.isAnswered(answers[q.id])).length;
+    const answeredCount = visible.filter((q: SurveyQuestion) => this.isAnswered(answers[q.id])).length;
     return Math.round((answeredCount / visible.length) * 100);
   });
 
@@ -57,11 +63,26 @@ export class SurveyFlowService {
 
   summaryItems = computed(() => {
     const answers = this.answers();
-    return this.allQuestions().map((q) => ({
-      id: q.id,
-      title: q.label,
-      value: answers[q.id]
-    }));
+    return this.allQuestions().map((q: SurveyQuestion) => {
+      const val = answers[q.id];
+      let displayValue = val;
+
+      if (q.options && val !== undefined && val !== null) {
+        if (Array.isArray(val)) {
+          displayValue = val
+            .map((v: string) => q.options?.find((o: SurveyOption) => o.value === v)?.label || v)
+            .join(', ');
+        } else {
+          displayValue = q.options.find((o: SurveyOption) => o.value === val)?.label || val;
+        }
+      }
+
+      return {
+        id: q.id,
+        title: q.label,
+        value: displayValue
+      };
+    });
   });
 
   constructor() {
@@ -84,27 +105,27 @@ export class SurveyFlowService {
     this.answers.set(existingAnswers);
     this.lastSavedAt.set(Object.keys(existingAnswers).length > 0 ? new Date() : null);
 
-    const visible = this.allQuestions().filter((q) => this.isQuestionVisible(q, existingAnswers));
-    const nextIndex = visible.findIndex((q) => !this.isAnswered(existingAnswers[q.id]));
+    const visible = this.allQuestions().filter((q: SurveyQuestion) => this.isQuestionVisible(q, existingAnswers));
+    const nextIndex = visible.findIndex((q: SurveyQuestion) => !this.isAnswered(existingAnswers[q.id]));
     this.stepIndex.set(nextIndex >= 0 ? nextIndex : 0);
   }
 
   setAnswer(questionId: string, value: any) {
-    this.answers.update((prev) => ({ ...prev, [questionId]: value }));
+    this.answers.update((prev: Record<string, any>) => ({ ...prev, [questionId]: value }));
     this.lastSavedAt.set(new Date());
   }
 
   next() {
     const total = this.visibleQuestions().length;
-    this.stepIndex.update((index) => (index < total - 1 ? index + 1 : index));
+    this.stepIndex.update((index: number) => (index < total - 1 ? index + 1 : index));
   }
 
   previous() {
-    this.stepIndex.update((index) => (index > 0 ? index - 1 : index));
+    this.stepIndex.update((index: number) => (index > 0 ? index - 1 : index));
   }
 
   goTo(questionId: string) {
-    const index = this.visibleQuestions().findIndex((q) => q.id === questionId);
+    const index = this.visibleQuestions().findIndex((q: SurveyQuestion) => q.id === questionId);
     if (index >= 0) {
       this.stepIndex.set(index);
     }
@@ -127,7 +148,10 @@ export class SurveyFlowService {
           type: question.type as SurveyQuestionType,
           placeholder: question.placeholder,
           required: question.required,
-          options: question.options?.map((opt) => opt.label || opt.value),
+          options: question.options?.map((opt) => ({
+            label: opt.label || opt.value,
+            value: opt.value ?? opt.label
+          })),
           dependency: question.dependency,
           config: question.config
         });

@@ -55,27 +55,27 @@
         <div *ngSwitchCase="'radio'" class="flex flex-col gap-2.5">
           <button *ngFor="let option of question.options || []" type="button"
             class="text-left border border-[#e2e8f0] rounded-[14px] p-[10px_14px] bg-white cursor-pointer font-semibold text-[#1e293b] transition-all"
-            [class.border-[#00e600]]="currentAnswer() === option"
-            [class.bg-[rgba(0,230,0,0.12)]]="currentAnswer() === option" (click)="setChoice(option)">
-            {{ option }}
+            [class.border-[#00e600]]="currentAnswer() === option.value"
+            [class.bg-[rgba(0,230,0,0.12)]]="currentAnswer() === option.value" (click)="setChoice(option.value)">
+            {{ option.label }}
           </button>
         </div>
 
         <div *ngSwitchCase="'select'" class="flex flex-col gap-2.5">
           <button *ngFor="let option of question.options || []" type="button"
             class="text-left border border-[#e2e8f0] rounded-[14px] p-[10px_14px] bg-white cursor-pointer font-semibold text-[#1e293b] transition-all"
-            [class.border-[#00e600]]="currentAnswer() === option"
-            [class.bg-[rgba(0,230,0,0.12)]]="currentAnswer() === option" (click)="setChoice(option)">
-            {{ option }}
+            [class.border-[#00e600]]="currentAnswer() === option.value"
+            [class.bg-[rgba(0,230,0,0.12)]]="currentAnswer() === option.value" (click)="setChoice(option.value)">
+            {{ option.label }}
           </button>
         </div>
 
         <div *ngSwitchCase="'checkbox'" class="flex flex-col gap-2.5">
           <button *ngFor="let option of question.options || []" type="button"
             class="text-left border border-[#e2e8f0] rounded-[14px] p-[10px_14px] bg-white cursor-pointer font-semibold text-[#1e293b] transition-all"
-            [class.border-[#00e600]]="isMultiSelected(option)" [class.bg-[rgba(0,230,0,0.18)]]="isMultiSelected(option)"
-            (click)="toggleMulti(option)">
-            {{ option }}
+            [class.border-[#00e600]]="isMultiSelected(option.value)" [class.bg-[rgba(0,230,0,0.18)]]="isMultiSelected(option.value)"
+            (click)="toggleMulti(option.value)">
+            {{ option.label }}
           </button>
         </div>
 
